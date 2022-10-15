@@ -14,5 +14,8 @@ db.authenticate().then(() => console.log("Connection has been established succes
 app.use('/api/users', authRoute);
 app.use('/api/contacts', contactRoute);
 
+app.get("/", (req, res) => {
+    res.send("I'm alive");
+});
 
 app.listen(3000, () => console.log("Listening on port 3000"));
