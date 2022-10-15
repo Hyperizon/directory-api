@@ -4,7 +4,7 @@ const app = express();
 const db = require('./util/database');
 const authRoute = require('./routes/auth');
 const contactRoute = require('./routes/contacts')
-
+require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -18,4 +18,4 @@ app.get("/", (req, res) => {
     res.send("I'm alive");
 });
 
-app.listen(3000, () => console.log("Listening on port 3000"));
+app.listen(process.env.PORT || 5000, () => console.log("Listening on port 3000"));
