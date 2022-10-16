@@ -5,8 +5,12 @@ const db = require('./util/database');
 require('./util/associations');
 const authRoute = require('./routes/auth');
 const contactRoute = require('./routes/contacts')
+const cors = require('cors');
 require('dotenv').config();
 
+app.use(cors({
+    origin: "*",
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
