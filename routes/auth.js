@@ -5,9 +5,10 @@ const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
 
 router.post('/register', async (req, res) => {
-    const validationScheme = joi.object({
+    const validation = joi.object({
         name: joi.string()
-            .required(),
+            .required()
+            .max(25),
         email: joi.string()
             .required()
             .email()
@@ -15,8 +16,7 @@ router.post('/register', async (req, res) => {
         password: joi.string()
             .required()
             .min(6)
-    });
-    const validation = validationScheme.validate(req.body);
+    }).validate(req.body);
     if (validation.error) return res.status(404).send(validation.error.details[0].message)
 
     const salt = await bcrypt.genSalt(10);
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const validationScheme = joi.object({
+    const validation = joi.object({
         email: joi.string()
             .required()
             .email()
@@ -47,8 +47,7 @@ router.post('/login', async (req, res) => {
         password: joi.string()
             .required()
             .min(6)
-    });
-    const validation = validationScheme.validate(req.body);
+    }).validate(req.body);
     if (validation.error) return res.status(404).send(validation.error.details[0].message)
 
     const user = await User.findOne({where: {email: req.body.email}});
