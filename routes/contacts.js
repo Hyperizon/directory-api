@@ -55,6 +55,8 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
             .regex(/^\+?[0-9][0-9]{7,14}$/, {name: 'phoneNumber'})
             .max(14),
         image: joi.string()
+            .max(255),
+        notes: joi.string()
             .max(255)
     }).validate(req.body);
     if (validation.error) return res.status(404).send(validation.error.details[0].message)
@@ -66,6 +68,7 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         image: (req.file) ? req.file.path : null,
+        notes: req.body.notes,
         userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id
     }).then((contact) => {
         res.status(200).send({contact: contact.id});
@@ -135,6 +138,8 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
             .regex(/^\+?[0-9][0-9]{7,14}$/, {name: 'phoneNumber'})
             .max(14),
         image: joi.string()
+            .max(255),
+        notes: joi.string()
             .max(255)
     }).validate(req.body);
     if (validation2.error) return res.status(404).send(validation2.error.details[0].message);
@@ -146,6 +151,7 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         image: (req.file) ? req.file.path : null,
+        notes: req.body.notes
     }, {
         where: {
             userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id,
