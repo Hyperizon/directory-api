@@ -7,7 +7,9 @@ const contactScheme = db.define('contacts', {
     company: {type: DataTypes.STRING(25)},
     email: {type: DataTypes.STRING(100)},
     phoneNumber: {type: DataTypes.STRING(14)},
-    image: {type: DataTypes.STRING}
+    image: {type: DataTypes.STRING},
+},{
+    paranoid: true,
 });
 
 module.exports = contactScheme;

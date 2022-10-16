@@ -3,6 +3,8 @@ const verifyToken = require('./verifyToken');
 const Contact = require('../model/Contact');
 const JWT = require("jsonwebtoken");
 const joi = require("joi");
+const uploadImage = require('../util/imageUploader');
+
 
 router.get('/', verifyToken, (req, res) => {
     Contact.findAll({where: {userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id}}).then(result => {
@@ -11,7 +13,7 @@ router.get('/', verifyToken, (req, res) => {
 
 });
 
-router.post('/create', verifyToken, (req, res) => {
+router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, res) => {
     const validation = joi.object({
         name: joi.string()
             .required()
@@ -38,11 +40,31 @@ router.post('/create', verifyToken, (req, res) => {
         company: req.body.company,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        image: req.body.image,
+        image: (req.file) ? req.file.path : null,
         userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id
     }).then((contact) => {
         res.status(200).send({contact: contact.id});
     }).catch(err => res.status(404).send(err.message));
 });
+
+router.delete('/delete/:id', verifyToken, (req, res) => {
+    const id = req.params.id;
+    if (!id) return res.status(404).send('The "id" parameter cannot be empty!')
+
+    Contact.destroy({
+        where: {
+            userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id,
+            id: id
+        }
+    }).then((result) => {
+        if (!result) res.status(404).send('Deleted unsuccessfully! Check "id" parameter.')
+        else res.status(200).send("Deleted successfully")
+    }).catch(err => res.status(404).send(err.message));
+});
+
+router.patch('/restore/:id', verifyToken, (req, res) => {
+    res.send(req.params.id);
+});
+
 
 module.exports = router;

@@ -13,6 +13,7 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use('/images', express.static('./images'))
 
 db.authenticate().then(() => {
     console.log("Connection has been established successfully.");
