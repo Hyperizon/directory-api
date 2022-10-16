@@ -43,7 +43,7 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
         name: joi.string()
             .required()
             .max(25),
-        lastname: joi.string()
+        lastName: joi.string()
             .max(25),
         company: joi.string()
             .max(25),
@@ -63,7 +63,7 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
 
     Contact.create({
         name: req.body.name,
-        lastname: req.body.lastname,
+        lastName: req.body.lastName,
         company: req.body.company,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
@@ -127,7 +127,7 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
     const validation2 = joi.object({
         name: joi.string()
             .max(25),
-        lastname: joi.string()
+        lastName: joi.string()
             .max(25),
         company: joi.string()
             .max(25),
@@ -146,7 +146,7 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
 
     Contact.update({
         name: req.body.name,
-        lastname: req.body.lastname,
+        lastname: req.body.lastName,
         company: req.body.company,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
