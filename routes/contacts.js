@@ -14,7 +14,7 @@ router.get('/', verifyToken, (req, res) => {
         }
     }).then(result => {
         res.send(result);
-    }).catch(() => res.send("No contact"));
+    }).catch(() => res.status(204).send("No contact"));
 
 });
 
@@ -35,7 +35,7 @@ router.get('/get/:id', verifyToken, (req, res) => {
         }
     }).then(result => {
         res.send(result);
-    }).catch(() => res.send("No contact"));
+    }).catch(() => res.status(204).send("No contact"));
 });
 
 router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, res) => {
@@ -75,7 +75,7 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
         star: req.body.star,
         userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id
     }).then((contact) => {
-        res.status(200).send({contact: contact.id});
+        res.status(201).send({contact: contact.id});
     }).catch(err => res.status(404).send(err.message));
 });
 
@@ -169,7 +169,7 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
     }).then((result) => {
         if (!result) res.status(404).send('Restore unsuccessfully! Check "id" parameter.')
         else res.status(200).send("Restore successfully")
-    }).catch(err => res.status(404).send(err.message));
+    }).catch(err => res.status(304).send(err.message));
 });
 
 
