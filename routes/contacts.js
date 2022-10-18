@@ -154,7 +154,7 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
 
     Contact.update({
         name: req.body.name,
-        lastname: req.body.lastName,
+        lastName: req.body.lastName,
         company: req.body.company,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
