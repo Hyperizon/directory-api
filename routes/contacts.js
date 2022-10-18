@@ -70,7 +70,7 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
         company: req.body.company,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        image: (req.file) ? req.file.path : null,
+        image: (req.file) ? req.file.path : undefined,
         notes: req.body.notes,
         star: req.body.star,
         userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id
@@ -128,6 +128,16 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
     }).validate(req.params);
     if (validation1.error) return res.status(404).send(validation1.error.details[0].message);
 
+    Contact.findOne({
+        where: {
+            userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id,
+            deletedAt: null,
+            id: req.params.id
+        }
+    }).then(result => {
+
+    }).catch(() => res.status(204).send("No contact"));
+
     const validation2 = joi.object({
         name: joi.string()
             .max(25),
@@ -158,7 +168,7 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
         company: req.body.company,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        image: (req.file) ? req.file.path : null,
+        image: (req.file) ? req.file.path : undefined,
         notes: req.body.notes,
         star: req.body.star,
     }, {
@@ -167,8 +177,8 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
             id: req.params.id
         }
     }).then((result) => {
-        if (!result) res.status(404).send('Restore unsuccessfully! Check "id" parameter.')
-        else res.status(200).send("Restore successfully")
+        if (!result) res.status(404).send('Update unsuccessfully! Check "id" parameter.')
+        else res.status(200).send("Update successfully")
     }).catch(err => res.status(304).send(err.message));
 });
 
