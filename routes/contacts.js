@@ -61,6 +61,9 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
             .max(255),
         star: joi.number()
             .min(0)
+            .max(1),
+        global: joi.number()
+            .min(0)
             .max(1)
     }).validate(req.body);
     if (validation.error) return res.status(404).send(validation.error.details[0].message)
@@ -74,6 +77,7 @@ router.post('/create', uploadImage.upload.single('image'), verifyToken, (req, re
         image: (req.file) ? req.file.path : undefined,
         notes: req.body.notes,
         star: req.body.star,
+        global: req.body.global,
         userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id
     }).then((contact) => {
         res.status(201).send({contact: contact.id});
@@ -159,7 +163,11 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
         star: joi.number()
             .integer()
             .min(0)
-            .max(1)
+            .max(1),
+        global: joi.number()
+            .integer()
+            .min(0)
+            .max(1),
     }).validate(req.body);
     if (validation2.error) return res.status(404).send(validation2.error.details[0].message);
 
@@ -172,6 +180,7 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
         image: (req.file) ? req.file.path : undefined,
         notes: req.body.notes,
         star: req.body.star,
+        global: req.body.global,
     }, {
         where: {
             userId: JWT.verify(req.header('auth-token'), process.env.TOKEN_SECRET).id,
