@@ -60,4 +60,20 @@ router.post('/login', async (req, res) => {
     res.header('auth-token', token).send();
 });
 
+router.post('/checkToken', async (req, res) => {
+    const validation = joi.object({
+        token: joi.string()
+            .required()
+    }).validate(req.body);
+    if (validation.error) return res.status(404).send(validation.error.details[0].message);
+
+    const user = await User.findOne({
+        where: {
+            id: JWT.verify(req.body.token, process.env.TOKEN_SECRET).id
+        }
+    })
+    if (!user) return res.status(404).send('Invalid Token');
+    else res.send({id: user.id, name: user.name, email: user.email, createdAt: user.createdAt});
+})
+
 module.exports = router;
