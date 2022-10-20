@@ -9,8 +9,9 @@ const contactScheme = db.define('contacts', {
     phoneNumber: {type: DataTypes.STRING(14)},
     image: {type: DataTypes.STRING},
     notes: {type: DataTypes.STRING(255)},
-    star: {type: DataTypes.TINYINT, defaultValue:0,},
-},{
+    star: {type: DataTypes.TINYINT, defaultValue: 0},
+    global: {type: DataTypes.TINYINT, defaultValue: 0},
+}, {
     paranoid: true,
 });
 

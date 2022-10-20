@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const verifyToken = require('./verifyToken');
 const Contact = require('../model/Contact');
+const Permission = require('../model/Permission');
 const JWT = require("jsonwebtoken");
 const joi = require("joi");
 const uploadImage = require('../util/imageUploader');
@@ -180,6 +181,17 @@ router.patch('/update/:id', uploadImage.upload.single('image'), verifyToken, (re
         if (!result) res.status(404).send('Update unsuccessfully! Check "id" parameter.')
         else res.status(200).send("Update successfully")
     }).catch(err => res.status(304).send(err.message));
+});
+
+router.get('/global', verifyToken, (req, res) => {
+    Contact.findAll({
+        where: {
+            global: 1,
+            deleteAt: null,
+        }
+    }).then(result => {
+        res.send(result);
+    }).catch(() => res.status(204).send("No contact"));
 });
 
 
